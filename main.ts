@@ -14,11 +14,11 @@ bluetooth.onUartDataReceived(serial.delimiters(Delimiters.NewLine), function () 
         basic.showIcon(IconNames.Heart)
         // Motor auf 45 Grad drehen (nach links kippen)
         // Hinweis: Passe P0 an, falls dein Motor woanders steckt
-        pins.servoWritePin(AnalogPin.P0, 45)
+        pins.servoWritePin(AnalogPin.C8, 45)
         // Kurz warten, damit der Ball rollen kann (1 Sekunde)
         basic.pause(1000)
         // Motor wieder in die Mitte (Neutralstellung)
-        pins.servoWritePin(AnalogPin.P0, 90)
+        pins.servoWritePin(AnalogPin.C8, 90)
     }
     // --- FALL 2: WEIẞ (Rechts sortieren) ---
     if (receivedString == "weiß") {
@@ -36,4 +36,4 @@ let receivedString = ""
 bluetooth.startUartService()
 basic.showIcon(IconNames.Surprised)
 // Stelle den Motor beim Start sicherheitshalber auf die Mitte
-pins.servoWritePin(AnalogPin.P0, 90)
+pins.servoWritePin(AnalogPin.C8, 90)
