@@ -1,39 +1,41 @@
-// Wenn Bluetooth verbunden wird
+// Bluetooth-Status
 bluetooth.onBluetoothConnected(function () {
     basic.showIcon(IconNames.Yes)
 })
-// Wenn Bluetooth getrennt wird
 bluetooth.onBluetoothDisconnected(function () {
     basic.showIcon(IconNames.No)
 })
-// Datenempfang und Motorsteuerung
+// UART-Empfang und Motorsteuerung
 bluetooth.onUartDataReceived(serial.delimiters(Delimiters.NewLine), function () {
     receivedString = bluetooth.uartReadUntil(serial.delimiters(Delimiters.NewLine))
-    // --- FALL 1: ORANGE (Links sortieren) ---
-    if (receivedString == "orange") {
-        basic.showIcon(IconNames.Heart)
-        // Motor auf 45 Grad drehen (nach links kippen)
-        // Hinweis: Passe P0 an, falls dein Motor woanders steckt
+    if (receivedString == "Blau") {
+        basic.showIcon(IconNames.TShirt)
+        // nach links kippen
         pins.servoWritePin(AnalogPin.C8, 45)
-        // Kurz warten, damit der Ball rollen kann (1 Sekunde)
         basic.pause(1000)
-        // Motor wieder in die Mitte (Neutralstellung)
+        // zurück in die Mitte
         pins.servoWritePin(AnalogPin.C8, 90)
     }
-    // --- FALL 2: WEIẞ (Rechts sortieren) ---
-    if (receivedString == "weiß") {
+    if (receivedString == "Gruen") {
+        // falls du "weiß" sendest, entsprechend anpassen
         basic.showIcon(IconNames.Skull)
-        // Motor auf 135 Grad drehen (nach rechts kippen)
-        pins.servoWritePin(AnalogPin.P0, 135)
-        // Kurz warten
+        // nach rechts kippen
+        pins.servoWritePin(AnalogPin.C8, 135)
         basic.pause(1000)
-        // Motor wieder in die Mitte
-        pins.servoWritePin(AnalogPin.P0, 90)
+        // zurück in die Mitte
+        pins.servoWritePin(AnalogPin.C8, 90)
+    }
+    if (receivedString == "Bg") {
+        // Hintergrund detektiert
+        basic.showIcon(IconNames.Happy)
+        // zurück zur Ausgangsposition
+        pins.servoWritePin(AnalogPin.C8, 90)
     }
 })
 let receivedString = ""
-// Start-Initialisierung
+// Initialisierung
 bluetooth.startUartService()
-basic.showIcon(IconNames.Surprised)
-// Stelle den Motor beim Start sicherheitshalber auf die Mitte
+bluetooth.uartWriteString("ready")
+basic.showIcon(IconNames.StickFigure)
+// Servo in Grundstellung
 pins.servoWritePin(AnalogPin.C8, 90)
